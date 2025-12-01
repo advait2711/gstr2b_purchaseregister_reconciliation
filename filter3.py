@@ -168,7 +168,7 @@ def run_reconciliation(df_2b, df_books, target_dates, tolerance=1):
                 # Merge the row
                 merged_row = {}
                 
-                # [FIX 1] Explicitly preserve GSTIN_Clean for the Results section
+                # Explicitly preserve GSTIN_Clean for the Results section
                 merged_row['GSTIN_Clean'] = row_2b['GSTIN_Clean']
 
                 for col in row_2b.index:
@@ -211,7 +211,6 @@ def run_reconciliation(df_2b, df_books, target_dates, tolerance=1):
         probable_matches = merged_step2[merged_step2['_merge'] == 'both'].copy()
         
         if not probable_matches.empty:
-            # Check if Gross Amt also matches
             invoice_diff_value_match = probable_matches[
                 probable_matches.apply(
                     lambda row: values_match_within_tolerance(
@@ -270,7 +269,7 @@ def run_reconciliation(df_2b, df_books, target_dates, tolerance=1):
 
     # B. Invoice Different but Values Match
     for _, row in invoice_diff_value_match.iterrows():
-        # [FIX 2] Use coalesce to find data in either _2b, _books, or plain columns
+        
         invoice_diff_results.append({
             'GSTIN': safe_str(coalesce(row, ['GSTIN_Clean', 'GSTIN_Clean_2b', 'GSTIN_Clean_books'])),
             'Supplier': safe_str(coalesce(row, ['Supplier_2b', 'Supplier_books', 'Supplier'])),
